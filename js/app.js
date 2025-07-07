@@ -32,24 +32,29 @@ function init() {
     turn = 'X'; // Reset turn to X
     winner = false; // Reset winner
     tie = false; // Reset tie
-    render();
+    render(); // got confused with the order of these functions, so I put render at the end
     console.log("I have been initilized!")
+    squareEls.forEach(square => {
+        square.className = 'sqr'; 
+        square.style.color = '';
+        square.style.backgroundColor = '';
+    });
+
 };
 
 function handleClick(event) {
 
-    const squareIndex = parseInt(event.target.id); // Get the index from the id of the clicked square
-    console.log(`Square Index: ${squareIndex}`); // Debugging line to check the index
+    const squareIndex = parseInt(event.target.id); 
+    console.log(`Square Index: ${squareIndex}`); 
     if (board[squareIndex] !== '' || winner || tie) {
-        return; // Ignore the click if the square is already filled or the game is over
+        return; 
     };
-    placePiece(squareIndex); // call the function and pass the squareIndex as an argument
-    checkWinner(); // Check if there's a winner after placing the piece
-    console.log(winner); // Debugging line to check if a winner is found
-    checkForTie(); // Check for a tie after placing the piece
-    switchPlayerTurn(); // Switch the turn after placing the piece
-    render(); // Render the updated board and message
-
+    placePiece(squareIndex); //dry?
+    checkWinner(); 
+    console.log(winner);
+    checkForTie();
+    switchPlayerTurn();
+    render();
 };
 
 function placePiece(index) {
@@ -60,7 +65,7 @@ function placePiece(index) {
 
 function switchPlayerTurn() {
     if (winner) {
-        return; // If there's a winner, no need to switch turns
+        return; 
     }
     else if (turn === 'X') {
         turn = 'O'; // Switch to player O
@@ -73,20 +78,20 @@ function switchPlayerTurn() {
 function checkWinner() {
     for (let combo of winningCombos) {
         const [a, b, c] = combo;
-        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-            winner = true; // Set winner to true if a winning combo is found
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) { //this one was hard to figure out on my own.
+            winner = true;
         }
     }
 };
 
 function checkForTie() {
     if (winner) {
-        return; // If there's a winner, no need to check for a tie
+        return;
     }
     if (board.every(square => square !== '')) {
         tie = true; 
         console.log(tie);
-        // Set tie to true if all squares are filled and no winner
+  
     }
 };
 
@@ -99,28 +104,34 @@ function render() {
 function updateBoard() {
     board.forEach((square, index) => {
         const squareEl = squareEls[index];
-        squareEl.textContent = square; // Update the text content of each square element
-        squareEl.className = 'sqr'; // Reset the class name to 'sqr'
+        squareEl.textContent = square; 
+        squareEl.className = 'sqr'; 
         if (square === 'X') {
-            squareEl.classList.add('x'); // Add 'x' class if the square is occupied by player X
+            squareEl.classList.add('x');
+            squareEl.style.color = 'blue';
+            squareEl.style.backgroundColor = '#FFEBCD'; 
         }
         else if (square === 'O') {
-            squareEl.classList.add('o'); // Add 'o' class if the square is occupied by player O
+            squareEl.classList.add('o');
+            squareEl.style.color = 'red';
+            squareEl.style.backgroundColor = '#FFEBCD'; 
         }
         else {
-            squareEl.classList.remove('x', 'o'); // Remove both classes if the square is empty
+            squareEl.classList.remove('x', 'o');
         }
     })};
 
 function updateMessage() {
     if (winner === false && tie === false) {
-        messageEl.textContent = `It's ${turn}'s turn!`;
+        messageEl.textContent = `It's player ${turn}'s turn! 🫵`;
+        messageEl.style.color = turn === 'X' ? 'blue' : 'red'; 
     }
     else if (winner === false && tie === true) {
-        messageEl.textContent = `It's a tie!`;
+        messageEl.textContent = `It's a tie! 🤷`;
+        messageEl.style.color = 'black'; 
     }
     else if (winner === true) {
-        messageEl.textContent = `${turn} wins!`;
+        messageEl.textContent = `Player ${turn} wins! 🎉`;
     };
 }; 
 
